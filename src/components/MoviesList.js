@@ -1,15 +1,19 @@
-export function MoviesList({ movies }) {
+export function MoviesList({ movies, onSelecting }) {
   return (
-    <ul className="list">
+    <ul className="list list-movies">
       {movies?.map((movie) => (
-        <Movie movie={movie} key={movie.imdbID} />
+        <Movie
+          movie={movie}
+          key={movie.imdbID}
+          onClick={() => onSelecting(movie.imdbID)}
+        />
       ))}
     </ul>
   );
 }
-function Movie({ movie }) {
+function Movie({ movie, onClick }) {
   return (
-    <li>
+    <li onClick={onClick}>
       <img src={movie.Poster} alt={`${movie.Title} poster`} />
       <h3>{movie.Title}</h3>
       <div>
