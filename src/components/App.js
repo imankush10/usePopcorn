@@ -56,6 +56,7 @@ export default function App() {
 
   useEffect(() => {
     async function fetchMovie() {
+      handleCloseMovie();
       setError("");
       if (query.length < 3) {
         setMovies(tempMovieData);

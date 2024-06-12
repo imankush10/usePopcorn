@@ -66,6 +66,19 @@ const MovieDetails = ({ id, handleCloseMovie, watched, setWatched }) => {
     return () => (document.title = "usePopcorn");
   }, [title]);
 
+  useEffect(() => {
+    function callback(e) {
+      if (e.code === "Escape") {
+        handleCloseMovie();
+      }
+    }
+    document.addEventListener("keydown", callback);
+
+    return () => {
+      document.removeEventListener("keydown", callback);
+    };
+  }, [handleCloseMovie]);
+
   const watchedMovie = watched.find((elm) => elm.imdbID === imdbID);
 
   return (
