@@ -72,7 +72,7 @@ export default function App() {
 
       try {
         const res = await fetch(
-          `http://www.omdbapi.com/?apikey=${API_KEY}&s=${query}`,
+          `https://www.omdbapi.com/?apikey=${API_KEY}&s=${query}`,
           { signal }
         );
         if (!res.ok) throw new Error("Failed to fetch");
