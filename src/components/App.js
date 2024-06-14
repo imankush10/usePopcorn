@@ -46,13 +46,25 @@ const API_KEY = "efb985aa";
 
 export default function App() {
   const [movies, setMovies] = useState();
-  const [watched, setWatched] = useState([]);
+  const [watched, setWatched] = useState(() =>
+    JSON.parse(localStorage.getItem("watched"))
+  );
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [selected, setSelected] = useState(null);
   const debounceTimeoutRef = useRef(null);
   const abortControllerRef = useRef(null);
+
+  function onSelecting(id) {
+    setSelected((selected) => (selected === id ? null : id));
+  }
+  function handleCloseMovie() {
+    setSelected(null);
+  }
+  function handleDeleteWatchMovie(movie) {
+    setWatched((prev) => prev.filter((elm) => elm.imdbID !== movie.imdbID));
+  }
 
   useEffect(() => {
     async function fetchMovie() {
@@ -90,6 +102,7 @@ export default function App() {
         setLoading(false);
       }
     }
+
     if (debounceTimeoutRef.current) {
       clearTimeout(debounceTimeoutRef.current);
     }
@@ -103,15 +116,9 @@ export default function App() {
     };
   }, [query]);
 
-  function onSelecting(id) {
-    setSelected((selected) => (selected === id ? null : id));
-  }
-  function handleCloseMovie() {
-    setSelected(null);
-  }
-  function handleDeleteWatchMovie(movie) {
-    setWatched((prev) => prev.filter((elm) => elm.imdbID !== movie.imdbID));
-  }
+  useEffect(() => {
+    localStorage.setItem("watched", JSON.stringify(watched));
+  }, [watched]);
 
   return (
     <>
