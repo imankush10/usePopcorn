@@ -1,12 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import StarRating from "./StarRating";
 import toast, { Toaster } from "react-hot-toast";
+import { useKeys } from "./useKeys";
 const API_KEY = "efb985aa";
 
 const MovieDetails = ({ id, handleCloseMovie, watched, setWatched }) => {
   const [movie, setMovie] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [rating, setRating] = useState("");
+
+  const ratingCount = useRef(0);
 
   const {
     Title: title,
@@ -41,6 +44,7 @@ const MovieDetails = ({ id, handleCloseMovie, watched, setWatched }) => {
       imdbRating: Number(imdbRating),
       userRating: rating,
       runtime: Number(runtime.split(" ")[0]),
+      ratingCount,
     };
     setWatched((prev) => [...prev, newWatchedMovie]);
     handleCloseMovie();
@@ -66,19 +70,11 @@ const MovieDetails = ({ id, handleCloseMovie, watched, setWatched }) => {
     return () => (document.title = "usePopcorn");
   }, [title]);
 
-  useEffect(() => {
-    function callback(e) {
-      if (e.code === "Escape") {
-        handleCloseMovie();
-      }
-    }
-    document.addEventListener("keydown", callback);
+  useEffect(()=>{
+    if(rating) ratingCount.current++;
+  }, [rating])
 
-    return () => {
-      document.removeEventListener("keydown", callback);
-    };
-  }, [handleCloseMovie]);
-
+  useKeys('Escape', handleCloseMovie);
   const watchedMovie = watched.find((elm) => elm.imdbID === imdbID);
 
   return (

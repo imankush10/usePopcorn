@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useRef } from "react";
+import { useKeys } from "./useKeys";
 
 export function Navbar({ children }) {
   return (
@@ -16,7 +17,14 @@ function Logo() {
     </div>
   );
 }
-export function SearchBar({query, setQuery}) {
+export function SearchBar({ query, setQuery }) {
+  const searchElement = useRef(null);
+
+  useKeys("Enter", function () {
+    if (document.activeElement === searchElement.current) return;
+    searchElement.current.focus();
+    setQuery("");
+  });
 
   return (
     <input
@@ -25,6 +33,7 @@ export function SearchBar({query, setQuery}) {
       placeholder="Search movies..."
       value={query}
       onChange={(e) => setQuery(e.target.value)}
+      ref={searchElement}
     />
   );
 }
